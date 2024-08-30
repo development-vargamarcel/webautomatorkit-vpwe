@@ -9,15 +9,18 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
     "@tsconfig/svelte": "^5.0.4",
     "@types/webextension-polyfill": "^0.10.0",
-    "svelte": "^4.2.18",
+    "svelte": "^5.0.0-next.242",
     "svelte-check": "^3.8.1",
     "tslib": "^2.6.3",
     "typescript": "^5.3.2",
     "vite": "^5.3.1",
     "vite-plugin-web-extension": "^4.1.6",
     "webextension-polyfill": "^0.10.0"
+  },
+  "overrides": {
+    "@sveltejs/vite-plugin-svelte": "^4.0.0-next.6"
   }
 }
