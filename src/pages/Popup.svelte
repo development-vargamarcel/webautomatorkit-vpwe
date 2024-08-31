@@ -1,7 +1,7 @@
 <script lang="ts">
   import Counter from "../lib/Counter.svelte";
 
-  console.log("Hello from the popup!");
+  console.log("Hello from the popup! svelte 5");
 </script>
 
 <div>
