@@ -1,12 +1,16 @@
 <script>
-  let count = 0;
+  class Counter {
+    count = $state(0);
 
-  function increment() {
-    count += 1;
+    increment() {
+      this.count++;
+    }
   }
+
+  const counter = new Counter();
 </script>
 
-test
-<button on:click={increment}>
-  clicks: {count}
+svelte 5 counter
+<button onclick={() => counter.increment()}>
+  clicks: {counter.count}
 </button>
