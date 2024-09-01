@@ -18,9 +18,6 @@
       console.log({ res });
     }
   }
-
-  // Call the function
-  // executeScriptInActiveTab();
 </script>
 
 <button on:click={executeScriptInActiveTab}>inject</button>
