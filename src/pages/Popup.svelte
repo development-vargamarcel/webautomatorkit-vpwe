@@ -10,12 +10,13 @@
     const activeTab = tabs[0];
     if (activeTab?.id) {
       console.log({ tabs }, "activeTab?.id", activeTab?.id);
-
-      const res = await browser.tabs.executeScript(activeTab.id, {
-        code: `console.log('hello');`,
+      browser.scripting.executeScript({
+        target: { tabId: activeTab.id },
+        args: [],
+        func: () => {
+          console.log("hello");
+        },
       });
-
-      console.log({ res });
     }
   }
 </script>
