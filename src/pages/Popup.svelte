@@ -2,7 +2,15 @@
   import Counter from "../lib/Counter.svelte";
   import browser from "webextension-polyfill";
 
-  async function executeScriptInActiveTab() {
+  const scriptToInject = () => {
+    console.log("hello");
+  };
+
+  async function executeScriptInActiveTab(
+    func: () => void,
+    args?: any[],
+    target?: any,
+  ) {
     const tabs = await browser?.tabs.query({
       active: true,
       currentWindow: true,
@@ -11,17 +19,19 @@
     if (activeTab?.id) {
       console.log({ tabs }, "activeTab?.id", activeTab?.id);
       browser.scripting.executeScript({
-        target: { tabId: activeTab.id },
-        args: [],
-        func: () => {
-          console.log("hello");
-        },
+        target: target ?? { tabId: activeTab.id },
+        args: args,
+        func: func,
       });
     }
   }
+
+  const handleClick = () => {
+    executeScriptInActiveTab(scriptToInject, []);
+  };
 </script>
 
-<button on:click={executeScriptInActiveTab}>inject</button>
+<button on:click={handleClick}>inject</button>
 <div>
   <img src="/icon-with-shadow.svg" alt="" />
   <h1>vite-plugin-web-extension</h1>
