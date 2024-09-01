@@ -1,6 +1,7 @@
 <script lang="ts">
   import Counter from "../lib/Counter.svelte";
   import browser from "webextension-polyfill";
+  import StepsAutomation from "../lib/StepsAutomation.svelte";
 
   const scriptToInject = () => {
     console.log("hello");
@@ -29,11 +30,7 @@
 
 <button on:click={handleClick}>inject</button>
 <div>
-  <img src="/icon-with-shadow.svg" alt="" />
-  <h1>vite-plugin-web-extension</h1>
-  <p>
-    Template: <code>svelte-ts</code>
-  </p>
+  <StepsAutomation />
 </div>
 <div>
   <Counter />
