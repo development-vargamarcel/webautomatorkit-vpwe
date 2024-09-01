@@ -6,11 +6,7 @@
     console.log("hello");
   };
 
-  async function executeScriptInActiveTab(
-    func: () => void,
-    args?: any[],
-    target?: any,
-  ) {
+  async function injectScript(func: () => void, args?: any[], target?: any) {
     const tabs = await browser?.tabs.query({
       active: true,
       currentWindow: true,
@@ -27,7 +23,7 @@
   }
 
   const handleClick = () => {
-    executeScriptInActiveTab(scriptToInject, []);
+    injectScript(scriptToInject, []);
   };
 </script>
 
