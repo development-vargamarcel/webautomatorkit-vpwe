@@ -20,9 +20,10 @@
   }
 
   // Call the function
-  executeScriptInActiveTab();
+  // executeScriptInActiveTab();
 </script>
 
+<button on:click={executeScriptInActiveTab}>inject</button>
 <div>
   <img src="/icon-with-shadow.svg" alt="" />
   <h1>vite-plugin-web-extension</h1>
