@@ -1,7 +1,26 @@
 <script lang="ts">
   import Counter from "../lib/Counter.svelte";
+  import browser from "webextension-polyfill";
 
-  console.log("Hello from the popup! svelte 5");
+  async function executeScriptInActiveTab() {
+    const tabs = await browser?.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    const activeTab = tabs[0];
+    if (activeTab?.id) {
+      console.log({ tabs }, "activeTab?.id", activeTab?.id);
+
+      const res = await browser.tabs.executeScript(activeTab.id, {
+        code: `console.log('hello');`,
+      });
+
+      console.log({ res });
+    }
+  }
+
+  // Call the function
+  executeScriptInActiveTab();
 </script>
 
 <div>

@@ -17,5 +17,8 @@
   "background": {
     "{{chrome}}.service_worker": "src/background.ts",
     "{{firefox}}.scripts": ["src/background.ts"]
-  }
+  },
+  "{{chrome}}.permissions": ["activeTab", "tabs", "scripting"],
+  "{{firefox}}.permissions": ["tabs"],
+  "{{chrome}}.host_permissions": ["<all_urls>"]
 }
