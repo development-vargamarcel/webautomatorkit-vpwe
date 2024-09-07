@@ -48,3 +48,20 @@ export const moveMouseToElement = (element) => {
   // Start the mouse movement
   moveMouse(startX, startY, targetX, targetY, 50);
 };
+
+export function addRelativeError(milliseconds, errorPercentage = 70) {
+  // Convert the percentage error into a decimal
+  const errorDecimal = errorPercentage / 100;
+
+  // Calculate the relative error amount
+  const errorAmount = milliseconds * errorDecimal;
+
+  // Generate a random sign (+ or -) to apply the error randomly
+  const sign = Math.random() < 0.5 ? -1 : 1;
+
+  // Apply the error amount to the original milliseconds
+  const result = milliseconds + sign * errorAmount;
+
+  // Return the final result, rounded to the nearest integer
+  return Math.round(result);
+}

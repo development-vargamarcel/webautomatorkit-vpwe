@@ -1,11 +1,14 @@
 <script>
+  import { addRelativeError } from "./utils/utils";
+  import { moveMouseToElement } from "./utils/utils";
+  const errorPercentage = 70;
   const steps = [
     {
       name: "clickOnConnect",
       waitTimeBeforeEachMainSelectorAndAction: 1000,
       waitTimeAfterEachMainSelectorAndAction: 1000,
       waitTimeBetweenMainSelectorsAndActions: 1000,
-      waitTimeAfterrevealingMoreSelectors: 1000,
+      waitTimeAfterRevealingMoreSelectors: 1000,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
       shouldRerunUntilNoSelectorsFound: true,
@@ -80,17 +83,31 @@
   const getPreciseType = (value) => {
     return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
   };
-  const handleActions = (step) => {
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const handleActions = async (step) => {
     const [selector, actions] = step.mainSelectorsAndActions.split("::");
     const actionsToPerform = actions.split(">");
     let previousActionResult;
     let isFirstAction = true;
-    actionsToPerform.forEach((selector, action) => {
+    for (const action of actionsToPerform) {
+      console.log({ previousActionResult, isFirstAction });
+      await wait(
+        addRelativeError(
+          step.waitTimeBeforeEachMainSelectorAndAction,
+          errorPercentage,
+        ),
+      );
       previousActionResult = actions[action](
         isFirstAction ? selector : previousActionResult,
       );
       isFirstAction = false;
-    });
+      await wait(
+        addRelativeError(
+          step.waitTimeAfterEachMainSelectorAndAction,
+          errorPercentage,
+        ),
+      );
+    }
   };
   const runSteps = (steps) => {
     steps.forEach((step) => {
