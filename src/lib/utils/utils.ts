@@ -22,6 +22,25 @@ export const runSteps = async (steps, config, obstacles) => {
     testfn: function () { },
   };
   CD.actions = {
+    markNodeWithClass: (className, node) => {
+      console.log({
+        node,
+        className
+      })
+      if (node && typeof className === 'string') {
+        node.classList.add(className);
+      } else {
+        console.warn('Invalid node or class name');
+      }
+      return node
+    },
+    deleteNode: (node) => {
+      console.log({ node })
+      if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+      return node
+    },
     click: (node) => {
       node.click();
       return node;
@@ -102,7 +121,7 @@ export const runSteps = async (steps, config, obstacles) => {
       let isFirstAction = true;
       for (const actionAndArgs of actionsToPerform) {
         const [action, argsString] = actionAndArgs.split('|')
-        const args = argsString ? argsString.split(' ') : null
+        const args = argsString ? argsString.split(' ') : []
         console.log({ args })
         console.log({ previousActionResult, isFirstAction });
         await CD.wait(
@@ -111,12 +130,9 @@ export const runSteps = async (steps, config, obstacles) => {
             config.errorPercentage,
           ),
         );
-        let currentActionResult: any
-        if (args) {
-          currentActionResult = CD.actions[action](...args)
-        } else {
-          currentActionResult = CD.actions[action](previousActionResult)
-        }
+
+        let currentActionResult: any = CD.actions[action](...args, previousActionResult)
+
         console.log({ currentActionResult, action });
         previousActionOfLastPairResult = currentActionResult
         previousActionResult = currentActionResult;
