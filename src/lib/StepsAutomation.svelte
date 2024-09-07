@@ -15,6 +15,7 @@
       waitTimeAfterRevealingMoreSelectors: 1000,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
+      repeatStepCondition: `getNodeWithText|Connect`,
       shouldRerunUntilNoSelectorsFound: true,
       forceStopCondition: `checkSelectorExists|[aria-label="limit reached"]`,
       mainSelectorsAndActions: `getNodeWithText|Connect>getNearestButton>click`,

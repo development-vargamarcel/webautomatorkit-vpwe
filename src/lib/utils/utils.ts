@@ -89,10 +89,12 @@ export const runSteps = async (steps, config, obstacles) => {
     return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
   };
   CD.wait = (ms) => new Promise((r) => setTimeout(r, ms));
-  CD.handleActions = async (step) => {
+  CD.handleActions = async (step, actionsToHandle) => {
     const selectorAndActionPairs = CD.getSelectorAndActionPairs(
-      step.mainSelectorsAndActions,
+      actionsToHandle || step.mainSelectorsAndActions,
     );
+    let previousActionOfLastPairResult;
+
     console.log({ selectorAndActionPairs });
     for (const selectorAndActionPair of selectorAndActionPairs) {
       const actionsToPerform = selectorAndActionPair.split(">");
@@ -116,6 +118,7 @@ export const runSteps = async (steps, config, obstacles) => {
           currentActionResult = CD.actions[action](previousActionResult)
         }
         console.log({ currentActionResult, action });
+        previousActionOfLastPairResult = currentActionResult
         previousActionResult = currentActionResult;
         isFirstAction = false;
         await CD.wait(
@@ -126,6 +129,7 @@ export const runSteps = async (steps, config, obstacles) => {
         );
       }
     }
+    return previousActionOfLastPairResult
   };
   CD.addRelativeError = (milliseconds, errorPercentage = 70) => {
     // Convert the percentage error into a decimal
@@ -185,7 +189,7 @@ export const runSteps = async (steps, config, obstacles) => {
   ////////////////////////////////////////
 
   console.log("window.CD", CD);
-  for (const step of steps) {
+  CD.handleStep = async (step) => {
     console.log({ step });
     await CD.wait(
       CD.addRelativeError(
@@ -193,8 +197,16 @@ export const runSteps = async (steps, config, obstacles) => {
         config.errorPercentage,
       ),
     );
-    console.log("starting ", { step });
-    CD.handleActions(step);
+    await CD.handleActions(step);
+
+    const shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
+    console.log({ shouldRepeatStep })
+    if (shouldRepeatStep) {
+      await CD.handleStep(step)
+    }
+  }
+  for (const step of steps) {
+    await CD.handleStep(step)
   }
 };
 export const moveMouseToElement = (element) => {
