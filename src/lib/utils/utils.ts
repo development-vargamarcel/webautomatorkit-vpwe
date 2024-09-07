@@ -15,7 +15,188 @@ export async function injectScript(func: () => void, args?: any[], target?: any)
     });
   }
 }
+export const runSteps = async (steps, config, obstacles) => {
+  ////////////////////////////////////////
+  const CD: any = {
+    test: "",
+    testfn: function () { },
+  };
+  CD.actions = {
+    click: (node) => {
+      node.click();
+      return node;
+    },
+    pageReload: () => {
+      location.reload();
+    },
+    jumpToBottomOfPage: () => {
+      window.scrollTo(0, document.body.scrollHeight);
+    },
+    checkSelectorExists: (selector) => {
+      return document.querySelector(selector) !== null;
+    },
+    getNode: (selector) => {
+      const node = document.querySelector(selector);
+      console.log("getNode", { selector, node });
+      // CD.moveMouseToElement(node);
+      return node;
+    },
+    getNodeWithText: (text) => {
+      if (!text) {
+        console.warn('not valid text value')
+        return
+      }
+      return Array.from(document.querySelectorAll("*")).find((el) => {
+        if (!el) {
+          console.warn('no element found')
+          return
+        }
+        const elText = el.textContent.trim();
+        return elText === text;
+      });
+    },
 
+    // Function to find the nearest descendant button of a given element
+    getNearestButton: (element) => {
+      return element.querySelector("button");
+    },
+    getNearestScrollableParent: (node) => {
+      if (node == null) {
+        return null;
+      }
+
+      if (node.scrollHeight > node.clientHeight) {
+        return node;
+      } else {
+        return this.getNearestScrollableParent(node.parentNode);
+      }
+    },
+    scrollToBottom: (nodes) => {
+      if (CD.getPreciseType(nodes) !== "Array") {
+        nodes = [nodes];
+      }
+
+      nodes.forEach((node) => {
+        if (node instanceof HTMLElement) {
+          node.scrollTop = node.scrollHeight;
+        } else {
+          console.warn("One of the items is not a valid HTML element:", node);
+        }
+      });
+    },
+  };
+  CD.getPreciseType = (value) => {
+    return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
+  };
+  CD.wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  CD.handleActions = async (step) => {
+    const selectorAndActionPairs = CD.getSelectorAndActionPairs(
+      step.mainSelectorsAndActions,
+    );
+    console.log({ selectorAndActionPairs });
+    for (const selectorAndActionPair of selectorAndActionPairs) {
+      const actionsToPerform = selectorAndActionPair.split(">");
+      let previousActionResult;
+      let isFirstAction = true;
+      for (const actionAndArgs of actionsToPerform) {
+        const [action, argsString] = actionAndArgs.split('|')
+        const args = argsString ? argsString.split(' ') : null
+        console.log({ args })
+        console.log({ previousActionResult, isFirstAction });
+        await CD.wait(
+          CD.addRelativeError(
+            step.waitTimeBeforeEachMainSelectorAndAction,
+            config.errorPercentage,
+          ),
+        );
+        let currentActionResult: any
+        if (args) {
+          currentActionResult = CD.actions[action](...args)
+        } else {
+          currentActionResult = CD.actions[action](previousActionResult)
+        }
+        console.log({ currentActionResult, action });
+        previousActionResult = currentActionResult;
+        isFirstAction = false;
+        await CD.wait(
+          CD.addRelativeError(
+            step.waitTimeAfterEachMainSelectorAndAction,
+            config.errorPercentage,
+          ),
+        );
+      }
+    }
+  };
+  CD.addRelativeError = (milliseconds, errorPercentage = 70) => {
+    // Convert the percentage error into a decimal
+    const errorDecimal = errorPercentage / 100;
+
+    // Calculate the relative error amount
+    const errorAmount = milliseconds * errorDecimal;
+
+    // Generate a random sign (+ or -) to apply the error randomly
+    const sign = Math.random() < 0.5 ? -1 : 1;
+
+    // Apply the error amount to the original milliseconds
+    const result = milliseconds + sign * errorAmount;
+
+    // Return the final result, rounded to the nearest integer
+    return Math.round(result);
+  };
+  CD.moveMouseToElement = (element) => {
+    if (!element) {
+      console.log("please provide a valid element");
+      return;
+    }
+    // Helper function to simulate smooth mouse movement
+    const moveMouse = (x1, y1, x2, y2, steps, step = 0) => {
+      if (step > steps) return;
+
+      // Calculate current position
+      const progress = step / steps;
+      const currentX = x1 + (x2 - x1) * progress + Math.random() * 10 - 5; // Add some randomness
+      const currentY = y1 + (y2 - y1) * progress + Math.random() * 10 - 5;
+
+      // Dispatch mousemove event
+      const event = new MouseEvent("mousemove", {
+        clientX: currentX,
+        clientY: currentY,
+        bubbles: true,
+      });
+      document.dispatchEvent(event);
+
+      // Move to the next step
+      setTimeout(() => moveMouse(x1, y1, x2, y2, steps, step + 1), 20);
+    };
+
+    // Get the element's position and size
+    const rect = element.getBoundingClientRect();
+    const startX = window.innerWidth / 2;
+    const startY = window.innerHeight / 2;
+    const targetX = rect.left + rect.width / 2;
+    const targetY = rect.top + rect.height / 2;
+
+    // Start the mouse movement
+    moveMouse(startX, startY, targetX, targetY, 50);
+  };
+  CD.getSelectorAndActionPairs = (selectorsAndActions) => {
+    return selectorsAndActions.split("\n");
+  };
+  ////////////////////////////////////////
+
+  console.log("window.CD", CD);
+  for (const step of steps) {
+    console.log({ step });
+    await CD.wait(
+      CD.addRelativeError(
+        config.waitTimeBeforeEachStep,
+        config.errorPercentage,
+      ),
+    );
+    console.log("starting ", { step });
+    CD.handleActions(step);
+  }
+};
 export const moveMouseToElement = (element) => {
   // Helper function to simulate smooth mouse movement
   const moveMouse = (x1, y1, x2, y2, steps, step = 0) => {
