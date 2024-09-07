@@ -2,15 +2,15 @@
   const steps = [
     {
       name: "clickOnConnect",
-      waitTimeBeforeClick: 1000,
-      waitTimeAfterClick: 1000,
-      waitTimeBetweenClicks: 1000,
+      waitTimeBeforeEachMainSelectorAndAction: 1000,
+      waitTimeAfterEachMainSelectorAndAction: 1000,
+      waitTimeBetweenMainSelectorsAndActions: 1000,
       waitTimeAfterrevealingMoreSelectors: 1000,
-      actionToRunBeforeClick: ``,
-      actionToRunAfterClick: ``,
+      actionToRunBeforeMainSelectorsAndActions: ``,
+      actionToRunAfterMainSelectorsAndActions: ``,
       shouldRerunUntilNoSelectorsFound: true,
       forceStopCondition: `[aria-label="limit reached"]::checkSelectorExists`,
-      selectorsAndActions: `[aria-label="Connect"]::getNode>click`,
+      mainSelectorsAndActions: `[aria-label="Connect"]::getNode>click`,
       selectorsAndActionsToRevealMoreSelectors: `[aria-label="Next"]::getNode>click
       [aria-label="Connect"]::getNode>getNearestScrollableParent>scrollToBottom
       jumpToBottomOfPage`,
@@ -20,13 +20,13 @@
   const obstacles = [
     {
       name: "clickOnObstacles",
-      waitTimeBeforeClick: 1000,
-      waitTimeAfterClick: 1000,
-      waitTimeBetweenClicks: 1000,
-      actionToRunBeforeClick: ``,
-      actionToRunAfterClick: ``,
+      waitTimeBeforeEachMainSelectorAndAction: 1000,
+      waitTimeAfterEachMainSelectorAndAction: 1000,
+      waitTimeBetweenMainSelectorsAndActions: 1000,
+      actionToRunBeforeMainSelectorsAndActions: ``,
+      actionToRunAfterMainSelectorsAndActions: ``,
       shouldRerunUntilNoSelectorsFound: true,
-      selectorsAndActions: `[aria-label="Send now"]::getNode>click,
+      mainSelectorsAndActions: `[aria-label="Send now"]::getNode>click,
         [aria-label="Send without a note"]::getNode>click,
         [aria-label="Got it"]::getNode>click,
         .ip-fuse-limit-alert__header.t-20.t-black.ph4::pageReload,
@@ -80,8 +80,8 @@
   const getPreciseType = (value) => {
     return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
   };
-  const handleActions = (actionsAndSelectors) => {
-    const [selector, actions] = actionsAndSelectors.split("::");
+  const handleActions = (step) => {
+    const [selector, actions] = step.mainSelectorsAndActions.split("::");
     const actionsToPerform = actions.split(">");
     let previousActionResult;
     let isFirstAction = true;
@@ -94,7 +94,7 @@
   };
   const runSteps = (steps) => {
     steps.forEach((step) => {
-      handleActions(step.selectorsAndActions);
+      handleActions(step);
     });
   };
 </script>
