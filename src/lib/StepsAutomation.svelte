@@ -48,7 +48,9 @@
       return document.querySelector(selector) !== null;
     },
     getNode: (selector) => {
-      return document.querySelector(selector);
+      const node = document.querySelector(selector);
+      moveMouseToElement(node);
+      return node;
     },
     getNearestScrollableParent: (node) => {
       if (node == null) {
@@ -88,6 +90,11 @@
         isFirstAction ? selector : previousActionResult,
       );
       isFirstAction = false;
+    });
+  };
+  const runSteps = (steps) => {
+    steps.forEach((step) => {
+      handleActions(step.selectorsAndActions);
     });
   };
 </script>

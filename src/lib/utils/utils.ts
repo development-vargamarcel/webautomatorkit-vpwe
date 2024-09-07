@@ -15,3 +15,36 @@ export async function injectScript(func: () => void, args?: any[], target?: any)
     });
   }
 }
+
+export const moveMouseToElement = (element) => {
+  // Helper function to simulate smooth mouse movement
+  const moveMouse = (x1, y1, x2, y2, steps, step = 0) => {
+    if (step > steps) return;
+
+    // Calculate current position
+    const progress = step / steps;
+    const currentX = x1 + (x2 - x1) * progress + Math.random() * 10 - 5; // Add some randomness
+    const currentY = y1 + (y2 - y1) * progress + Math.random() * 10 - 5;
+
+    // Dispatch mousemove event
+    const event = new MouseEvent('mousemove', {
+      clientX: currentX,
+      clientY: currentY,
+      bubbles: true
+    });
+    document.dispatchEvent(event);
+
+    // Move to the next step
+    setTimeout(() => moveMouse(x1, y1, x2, y2, steps, step + 1), 20);
+  };
+
+  // Get the element's position and size
+  const rect = element.getBoundingClientRect();
+  const startX = window.innerWidth / 2;
+  const startY = window.innerHeight / 2;
+  const targetX = rect.left + rect.width / 2;
+  const targetY = rect.top + rect.height / 2;
+
+  // Start the mouse movement
+  moveMouse(startX, startY, targetX, targetY, 50);
+};
