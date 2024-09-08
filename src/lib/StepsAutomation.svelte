@@ -17,7 +17,7 @@
       actionToRunAfterMainSelectorsAndActions: ``,
       repeatStepCondition: `getNodeWithText|Connect`,
       shouldRerunUntilNoSelectorsFound: true,
-      forceStopCondition: `checkSelectorExists|[aria-label="limit reached"]`,
+      forceStopCondition: `getNodeWithText|limit reached`,
       mainSelectorsAndActions: `getNodeWithText|Connect>markNodeWithClass|deleteThisOne>getNearestButton>click>getNode|.deleteThisOne>deleteNode`,
       selectorsAndActionsToRevealMoreSelectors: `getNode|[aria-label="Next"]>click
       getNode|[aria-label="Connect"]>getNearestScrollableParent>scrollToBottom

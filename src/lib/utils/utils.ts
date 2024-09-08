@@ -121,7 +121,7 @@ export const runSteps = async (steps, config, obstacles) => {
       let isFirstAction = true;
       for (const actionAndArgs of actionsToPerform) {
         const [action, argsString] = actionAndArgs.split('|')
-        const args = argsString ? argsString.split(' ') : []
+        const args = argsString ? argsString.split(',') : []
         console.log({ args })
         console.log({ previousActionResult, isFirstAction });
         await CD.wait(
