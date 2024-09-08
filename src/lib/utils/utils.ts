@@ -225,6 +225,7 @@ export const runSteps = async (steps, config, obstacles) => {
       if (shouldRepeatStep) {
         await CD.handleStep(step)
       }
+      console.log({ shouldRepeatStep })
     }
   }
   for (const step of steps) {

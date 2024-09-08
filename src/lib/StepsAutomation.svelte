@@ -4,15 +4,16 @@
   const config = {
     errorPercentage: 70,
     waitTimeBeforeEachStep: 1000,
+    obstaclesToCheckInTheBackgroundwaitTimeBetween: 200,
   };
 
   const steps = [
     {
       name: "clickOnConnect",
-      waitTimeBeforeEachMainSelectorAndAction: 1000,
-      waitTimeBetweenMainSelectorsAndActions: 1000,
-      waitTimeAfterEachMainSelectorAndAction: 1000,
-      waitTimeAfterRevealingMoreSelectors: 1000,
+      waitTimeBeforeEachMainSelectorAndAction: 500,
+      waitTimeBetweenMainSelectorsAndActions: 500,
+      waitTimeAfterEachMainSelectorAndAction: 500,
+      waitTimeAfterRevealingMoreSelectors: 500,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
       repeatStepCondition: `getNodeWithText|Connect`,
@@ -24,13 +25,13 @@
       jumpToBottomOfPage`,
     },
   ];
-
+  const obstaclesToCheckInTheBackground = [];
   const obstacles = [
     {
       name: "clickOnObstacles",
-      waitTimeBeforeEachMainSelectorAndAction: 1000,
-      waitTimeAfterEachMainSelectorAndAction: 1000,
-      waitTimeBetweenMainSelectorsAndActions: 1000,
+      waitTimeBeforeEachMainSelectorAndAction: 500,
+      waitTimeAfterEachMainSelectorAndAction: 500,
+      waitTimeBetweenMainSelectorsAndActions: 500,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
       shouldRerunUntilNoSelectorsFound: true,
