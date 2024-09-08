@@ -215,10 +215,16 @@ export const runSteps = async (steps, config, obstacles) => {
     );
     await CD.handleActions(step);
 
-    const shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
+    let shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
     console.log({ shouldRepeatStep })
     if (shouldRepeatStep) {
       await CD.handleStep(step)
+    } else {
+      await CD.handleActions(step, step.selectorsAndActionsToRevealMoreSelectors)
+      shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
+      if (shouldRepeatStep) {
+        await CD.handleStep(step)
+      }
     }
   }
   for (const step of steps) {

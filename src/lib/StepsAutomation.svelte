@@ -17,10 +17,10 @@
       actionToRunAfterMainSelectorsAndActions: ``,
       repeatStepCondition: `getNodeWithText|Connect`,
       shouldRerunUntilNoSelectorsFound: true,
-      forceStopCondition: `getNodeWithText|limit reached`,
+      forceStopCondition: `getNodeWithText|limit reached,`,
       mainSelectorsAndActions: `getNodeWithText|Connect>markNodeWithClass|deleteThisOne>getNearestButton>click>getNode|.deleteThisOne>deleteNode`,
-      selectorsAndActionsToRevealMoreSelectors: `getNode|[aria-label="Next"]>click
-      getNode|[aria-label="Connect"]>getNearestScrollableParent>scrollToBottom
+      selectorsAndActionsToRevealMoreSelectors: `getNodeWithText|Next>click
+      getNodeWithText|Connect>getNearestScrollableParent>scrollToBottom
       jumpToBottomOfPage`,
     },
   ];
