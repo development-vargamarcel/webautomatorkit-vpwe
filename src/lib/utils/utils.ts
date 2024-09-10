@@ -223,7 +223,20 @@ export const runSteps = async (steps, config, obstacles) => {
       console.info("Printing every 500 milliseconds", window?.counter);
     }, 500); // 500 milliseconds interval
   }
+  CD.waitUntil = async (conditionFunction, timeout = 300, maxRetries = 10) => {
+    let retries = 0;
 
+    // Use a while loop to continuously check the condition
+    while (!conditionFunction()) {
+      if (retries >= maxRetries) {
+        throw new Error("Condition not met within the allowed retries.");
+      }
+      retries++;
+
+      // Wait for the specified timeout before checking again
+      await new Promise((resolve) => setTimeout(resolve, timeout));
+    }
+  }
   // Run the function in a separate context
   // printMessage();
   //////
@@ -248,12 +261,20 @@ export const runSteps = async (steps, config, obstacles) => {
       console.log('should not repeat')
       const selectorsAndActionsToRevealMoreSelectorsRESULT = await CD.handleActions(step, step.selectorsAndActionsToRevealMoreSelectors)
       console.log('qwert', selectorsAndActionsToRevealMoreSelectorsRESULT)
+
       await CD.wait(
         CD.addRelativeError(
           step.waitTimeAfterRevealingMoreSelectors,
           config.errorPercentageMax,
         ),
       );
+      console.log('waited')
+
+      //await CD.waitUntil(() => {
+      // return CD.handleActions(step, step.repeatStepCondition)
+      // })
+      // console.log('waitUntil finished', CD.handleActions(step, step.repeatStepCondition))
+
       shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
       console.log('shouldRepeatStep 2', { shouldRepeatStep })
       if (shouldRepeatStep) {
