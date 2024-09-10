@@ -112,7 +112,11 @@ export const runSteps = async (steps, config, obstacles) => {
     console.log(`waiting for ${ms} ms`)
     return setTimeout(r, ms)
   });
-  CD.addRelativeError = (milliseconds, errorPercentage = 70) => {
+  CD.addRelativeError = (milliseconds, errorPercentageMax = 70) => {
+    function getRandomNumber(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+    const errorPercentage = getRandomNumber(0, errorPercentageMax)
     // Convert the percentage error into a decimal
     const errorDecimal = errorPercentage / 100;
 
@@ -147,7 +151,7 @@ export const runSteps = async (steps, config, obstacles) => {
         await CD.wait(
           CD.addRelativeError(
             step.waitTimeBeforeEachMainSelectorAndAction,
-            config.errorPercentage,
+            config.errorPercentageMax,
           ),
         );
 
@@ -160,7 +164,7 @@ export const runSteps = async (steps, config, obstacles) => {
         await CD.wait(
           CD.addRelativeError(
             step.waitTimeAfterEachMainSelectorAndAction,
-            config.errorPercentage,
+            config.errorPercentageMax,
           ),
         );
       }
@@ -231,7 +235,7 @@ export const runSteps = async (steps, config, obstacles) => {
     await CD.wait(
       CD.addRelativeError(
         config.waitTimeBeforeEachStep,
-        config.errorPercentage,
+        config.errorPercentageMax,
       ),
     );
     await CD.handleActions(step);
@@ -247,7 +251,7 @@ export const runSteps = async (steps, config, obstacles) => {
       await CD.wait(
         CD.addRelativeError(
           config.waitTimeAfterRevealingMoreSelectors,
-          config.errorPercentage,
+          config.errorPercentageMax,
         ),
       );
       shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)

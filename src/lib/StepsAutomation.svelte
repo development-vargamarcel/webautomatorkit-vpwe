@@ -2,7 +2,7 @@
   import { injectScript, runSteps } from "./utils/utils";
 
   const config = {
-    errorPercentage: 70,
+    errorPercentageMax: 70,
     waitTimeBeforeEachStep: 1000,
     obstaclesToCheckInTheBackgroundwaitTimeBetween: 200,
   };
