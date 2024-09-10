@@ -112,6 +112,22 @@ export const runSteps = async (steps, config, obstacles) => {
     console.log(`waiting for ${ms} ms`)
     return setTimeout(r, ms)
   });
+  CD.addRelativeError = (milliseconds, errorPercentage = 70) => {
+    // Convert the percentage error into a decimal
+    const errorDecimal = errorPercentage / 100;
+
+    // Calculate the relative error amount
+    const errorAmount = milliseconds * errorDecimal;
+
+    // Generate a random sign (+ or -) to apply the error randomly
+    const sign = Math.random() < 0.5 ? -1 : 1;
+
+    // Apply the error amount to the original milliseconds
+    const result = milliseconds + sign * errorAmount;
+
+    // Return the final result, rounded to the nearest integer
+    return Math.round(result);
+  };
   CD.handleActions = async (step, actionsToHandle) => {
     const selectorAndActionPairs = CD.getSelectorAndActionPairs(
       actionsToHandle || step.mainSelectorsAndActions,
@@ -152,22 +168,7 @@ export const runSteps = async (steps, config, obstacles) => {
     console.info({ previousActionOfLastPairResult })
     return previousActionOfLastPairResult
   };
-  CD.addRelativeError = (milliseconds, errorPercentage = 70) => {
-    // Convert the percentage error into a decimal
-    const errorDecimal = errorPercentage / 100;
 
-    // Calculate the relative error amount
-    const errorAmount = milliseconds * errorDecimal;
-
-    // Generate a random sign (+ or -) to apply the error randomly
-    const sign = Math.random() < 0.5 ? -1 : 1;
-
-    // Apply the error amount to the original milliseconds
-    const result = milliseconds + sign * errorAmount;
-
-    // Return the final result, rounded to the nearest integer
-    return Math.round(result);
-  };
   CD.moveMouseToElement = (element) => {
     if (!element) {
       console.log("please provide a valid element");
@@ -220,7 +221,7 @@ export const runSteps = async (steps, config, obstacles) => {
   }
 
   // Run the function in a separate context
-  printMessage();
+  // printMessage();
   //////
   ////////////////////////////////////////
 
@@ -295,99 +296,15 @@ export const moveMouseToElement = (element) => {
   moveMouse(startX, startY, targetX, targetY, 50);
 };
 
-export function addRelativeError(milliseconds, errorPercentage = 70) {
-  // Convert the percentage error into a decimal
-  const errorDecimal = errorPercentage / 100;
 
-  // Calculate the relative error amount
-  const errorAmount = milliseconds * errorDecimal;
-
-  // Generate a random sign (+ or -) to apply the error randomly
-  const sign = Math.random() < 0.5 ? -1 : 1;
-
-  // Apply the error amount to the original milliseconds
-  const result = milliseconds + sign * errorAmount;
-
-  // Return the final result, rounded to the nearest integer
-  return Math.round(result);
-}
 
 const getPreciseType = (value) => {
   return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
 };
-export const parseAll = (json) => {
-  return JSON.parse(json, function (key, value) {
-    if (typeof value === "string" &&
-      value.startsWith("/Function(") &&
-      value.endsWith(")/")) {
-      value = value.substring(10, value.length - 2);
-      return (0, eval)("(" + value + ")");
-    }
-    return value;
-  });
-}
-export const stringToJs = (string) => {
-  if (getPreciseType(string) !== "string") {
-    console.warn(`expectig string but got ${getPreciseType(string)},will use it as is.If object,you do not need this function,maybe this function was run previously.`, { string });
-    return string;
-  }
-  if (string.includes('/Function') && string.includes(')/')) {
-    return parseAll(string);
-  }
-  return new Function(`return ${string}`)();
-};
 
-export const objectToSourceCode = (obj) => {
-  // Check if the input is an object
-  if (typeof obj !== 'object' || obj === null) {
-    throw new Error('Input must be an object');
-  }
-
-  // Helper function to convert functions to strings
-  function functionToString(fn) {
-    return fn.toString();
-  }
-
-  // Recursively convert the object to source code
-  function convertObjectToSourceCode(obj) {
-    if (typeof obj === 'function') {
-      return functionToString(obj);
-    }
-
-    if (Array.isArray(obj)) {
-      return '[' + obj.map(convertObjectToSourceCode).join(', ') + ']';
-    }
-
-    if (typeof obj === 'object') {
-      return (
-        '{' +
-        Object.entries(obj)
-          .map(([key, value]) => {
-            if (key.includes('-')) {
-              key = `'${key}'`
-            }
-            return `${key}: ${convertObjectToSourceCode(value)}`
-          })
-          .join(', ') +
-        '}'
-      );
-    }
-
-    // All other types are converted to string literals
-    return JSON.stringify(obj);
-  }
-
-  return convertObjectToSourceCode(obj);
-}
 
 export const utils = {
   injectScript: injectScript,
   moveMouseToElement: moveMouseToElement,
   addRelativeError: addRelativeError
 }
-const testStrictEquals = (text) => {
-  1 === 1;
-  return 1 === 1;
-};
-
-console.log(testStrictEquals, testStrictEquals('ds'));
