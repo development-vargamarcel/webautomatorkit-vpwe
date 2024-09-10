@@ -223,18 +223,18 @@ export const runSteps = async (steps, config, obstacles) => {
       console.info("Printing every 500 milliseconds", window?.counter);
     }, 500); // 500 milliseconds interval
   }
-  CD.waitUntil = async (conditionFunction, timeout = 300, maxRetries = 10) => {
+  CD.waitUntil = async (asyncConditionFunction, timeout = 300, maxRetries = 10) => {
+    //asyncConditionFunction must return a promise
     let retries = 0;
 
-    // Use a while loop to continuously check the condition
-    while (!conditionFunction()) {
+    while (!await asyncConditionFunction()) {
+      console.log('conditionFunction()2', asyncConditionFunction())
       if (retries >= maxRetries) {
+        console.error("Condition not met within the allowed retries.")
         throw new Error("Condition not met within the allowed retries.");
       }
       retries++;
-
-      // Wait for the specified timeout before checking again
-      await new Promise((resolve) => setTimeout(resolve, timeout));
+      await CD.wait(timeout)
     }
   }
   // Run the function in a separate context
@@ -262,18 +262,20 @@ export const runSteps = async (steps, config, obstacles) => {
       const selectorsAndActionsToRevealMoreSelectorsRESULT = await CD.handleActions(step, step.selectorsAndActionsToRevealMoreSelectors)
       console.log('qwert', selectorsAndActionsToRevealMoreSelectorsRESULT)
 
-      await CD.wait(
-        CD.addRelativeError(
-          step.waitTimeAfterRevealingMoreSelectors,
-          config.errorPercentageMax,
-        ),
-      );
-      console.log('waited')
+      // await CD.wait(
+      //   CD.addRelativeError(
+      //     step.waitTimeAfterRevealingMoreSelectors,
+      //     config.errorPercentageMax,
+      //   ),
+      // );
+      // console.log('waited')
 
-      //await CD.waitUntil(() => {
-      // return CD.handleActions(step, step.repeatStepCondition)
-      // })
-      // console.log('waitUntil finished', CD.handleActions(step, step.repeatStepCondition))
+      await CD.waitUntil(async () => {
+        const value = await CD.handleActions(step, step.repeatStepCondition)
+        console.log({ value })
+        return value
+      })
+      console.log('waitUntil finished', CD.handleActions(step, step.repeatStepCondition))
 
       shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
       console.log('shouldRepeatStep 2', { shouldRepeatStep })
