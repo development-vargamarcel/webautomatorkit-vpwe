@@ -16,6 +16,7 @@ export async function injectScript(func: () => void, args?: any[], target?: any)
   }
 }
 export const runSteps = async (steps, config, obstacles) => {
+
   ////////////////////////////////////////
   const CD: any = {
     test: "",
@@ -107,7 +108,10 @@ export const runSteps = async (steps, config, obstacles) => {
   CD.getPreciseType = (value) => {
     return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
   };
-  CD.wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  CD.wait = (ms) => new Promise((r) => {
+    console.log(`waiting for ${ms} ms`)
+    return setTimeout(r, ms)
+  });
   CD.handleActions = async (step, actionsToHandle) => {
     const selectorAndActionPairs = CD.getSelectorAndActionPairs(
       actionsToHandle || step.mainSelectorsAndActions,
@@ -145,6 +149,7 @@ export const runSteps = async (steps, config, obstacles) => {
         );
       }
     }
+    console.info({ previousActionOfLastPairResult })
     return previousActionOfLastPairResult
   };
   CD.addRelativeError = (milliseconds, errorPercentage = 70) => {
@@ -202,6 +207,21 @@ export const runSteps = async (steps, config, obstacles) => {
   CD.getSelectorAndActionPairs = (selectorsAndActions) => {
     return selectorsAndActions.split("\n");
   };
+  ///// delete this
+  function printMessage() {
+    setInterval(() => {
+      if (CD.getPreciseType(window.counter) == 'undefined') {
+        window.counter = 0
+      } else {
+        window.counter = window.counter + 1
+      }
+      console.info("Printing every 500 milliseconds", window?.counter);
+    }, 500); // 500 milliseconds interval
+  }
+
+  // Run the function in a separate context
+  printMessage();
+  //////
   ////////////////////////////////////////
 
   console.log("window.CD", CD);
@@ -216,21 +236,31 @@ export const runSteps = async (steps, config, obstacles) => {
     await CD.handleActions(step);
 
     let shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
-    console.log({ shouldRepeatStep })
+    console.log('shouldRepeatStep 1', { shouldRepeatStep })
     if (shouldRepeatStep) {
       await CD.handleStep(step)
     } else {
-      await CD.handleActions(step, step.selectorsAndActionsToRevealMoreSelectors)
+      console.log('should not repeat')
+      const selectorsAndActionsToRevealMoreSelectorsRESULT = await CD.handleActions(step, step.selectorsAndActionsToRevealMoreSelectors)
+      console.log('qwert', selectorsAndActionsToRevealMoreSelectorsRESULT)
+      await CD.wait(
+        CD.addRelativeError(
+          config.waitTimeAfterRevealingMoreSelectors,
+          config.errorPercentage,
+        ),
+      );
       shouldRepeatStep = await CD.handleActions(step, step.repeatStepCondition)
+      console.log('shouldRepeatStep 2', { shouldRepeatStep })
       if (shouldRepeatStep) {
         await CD.handleStep(step)
       }
-      console.log({ shouldRepeatStep })
     }
   }
   for (const step of steps) {
     await CD.handleStep(step)
   }
+
+
 };
 export const moveMouseToElement = (element) => {
   // Helper function to simulate smooth mouse movement
