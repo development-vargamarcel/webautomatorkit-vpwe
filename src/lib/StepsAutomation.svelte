@@ -10,10 +10,10 @@
   const steps = [
     {
       name: "clickOnConnect",
-      waitTimeBeforeEachMainSelectorAndAction: 2000,
-      waitTimeBetweenMainSelectorsAndActions: 2000,
-      waitTimeAfterEachMainSelectorAndAction: 2000,
-      waitTimeAfterRevealingMoreSelectors: 5000,
+      waitTimeBeforeEachMainSelectorAndAction: 200,
+      waitTimeBetweenMainSelectorsAndActions: 200,
+      waitTimeAfterEachMainSelectorAndAction: 200,
+      waitTimeAfterRevealingMoreSelectors: 10000,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
       repeatStepCondition: `getNodeWithText|Connect`,
