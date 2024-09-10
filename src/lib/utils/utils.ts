@@ -250,7 +250,7 @@ export const runSteps = async (steps, config, obstacles) => {
       console.log('qwert', selectorsAndActionsToRevealMoreSelectorsRESULT)
       await CD.wait(
         CD.addRelativeError(
-          config.waitTimeAfterRevealingMoreSelectors,
+          step.waitTimeAfterRevealingMoreSelectors,
           config.errorPercentageMax,
         ),
       );

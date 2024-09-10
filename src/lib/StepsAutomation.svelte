@@ -13,7 +13,7 @@
       waitTimeBeforeEachMainSelectorAndAction: 200,
       waitTimeBetweenMainSelectorsAndActions: 200,
       waitTimeAfterEachMainSelectorAndAction: 200,
-      waitTimeAfterRevealingMoreSelectors: 10000,
+      waitTimeAfterRevealingMoreSelectors: 2000,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
       repeatStepCondition: `getNodeWithText|Connect`,
