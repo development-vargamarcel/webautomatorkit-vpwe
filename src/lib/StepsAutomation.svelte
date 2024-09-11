@@ -4,43 +4,43 @@
   const config = {
     errorPercentageMax: 70,
     waitTimeBeforeEachStep: 1000,
-    obstaclesToCheckInTheBackgroundwaitTimeBetween: 200,
+    obstaclesToCheckInTheBackgroundWaitTimeBetween: 1000,
   };
 
   const steps = [
     {
       name: "clickOnConnect",
-      waitTimeBeforeEachMainSelectorAndAction: 200,
-      waitTimeBetweenMainSelectorsAndActions: 200,
-      waitTimeAfterEachMainSelectorAndAction: 200,
+      waitTimeBeforeEachMainSelectorAndAction: 500,
+      waitTimeBetweenMainSelectorsAndActions: 500,
+      waitTimeAfterEachMainSelectorAndAction: 500,
       waitTimeAfterRevealingMoreSelectors: 2000,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
-      repeatStepCondition: `getNodeWithText|Connect`,
+      repeatStepCondition: `getNodeWithText|Message`,
       shouldRerunUntilNoSelectorsFound: true,
       forceStopCondition: `getNodeWithText|limit reached,`,
-      mainSelectorsAndActions: `getNodeWithText|Connect>markNodeWithClass|deleteThisOne>getNearestButton>click>getNode|.deleteThisOne>deleteNode`,
+      mainSelectorsAndActions: `getNodeWithText|Message>markNodeWithClass|deleteThisOne>getNearestButton>click>getNode|.deleteThisOne>deleteNode`,
       selectorsAndActionsToRevealMoreSelectors: `getNodeWithText|Next>click`,
     },
   ];
   //
   // getNodeWithText|Connect>getNearestScrollableParent>scrollToBottom
   // jumpToBottomOfPage
-  const obstaclesToCheckInTheBackground = [];
+  // const obstaclesToCheckInTheBackground = [];
   const obstacles = [
     {
       name: "clickOnObstacles",
-      waitTimeBeforeEachMainSelectorAndAction: 500,
-      waitTimeAfterEachMainSelectorAndAction: 500,
-      waitTimeBetweenMainSelectorsAndActions: 500,
+      waitTimeBeforeEachMainSelectorAndAction: 0,
+      waitTimeAfterEachMainSelectorAndAction: 0,
+      waitTimeBetweenMainSelectorsAndActions: 0,
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
       shouldRerunUntilNoSelectorsFound: true,
-      mainSelectorsAndActions: `getNode|[aria-label="Send now"]>click,
-        getNode|[aria-label="Send without a note"]>click,
-        getNode|[aria-label="Got it"]>click,
-        pageReload|.ip-fuse-limit-alert__header.t-20.t-black.ph4,
-      `,
+      mainSelectorsAndActions: `getNode|[aria-label="Dismiss"]>markNodeWithClass|deleteThisOne>click>getNode|.deleteThisOne>deleteNode
+getNode|[aria-label="Send now"]>click
+getNodeWithText|Send without a note>click
+getNode|[aria-label="Got it"]>click
+pageReload|.ip-fuse-limit-alert__header.t-20.t-black.ph4`,
     },
   ];
   ////

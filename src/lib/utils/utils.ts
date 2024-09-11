@@ -284,6 +284,11 @@ export const runSteps = async (steps, config, obstacles) => {
       }
     }
   }
+  setInterval(() => {
+    for (const obstacle of obstacles) {
+      CD.handleActions(obstacle, obstacle.mainSelectorsAndActions)
+    }
+  }, obstacles.obstaclesToCheckInTheBackgroundWaitTimeBetween)
   for (const step of steps) {
     await CD.handleStep(step)
   }
