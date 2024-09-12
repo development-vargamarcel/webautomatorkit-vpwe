@@ -104,6 +104,19 @@ export const runSteps = async (steps, config, obstacles) => {
         }
       });
     },
+    // Method to get all elements of a specific type (tag name) on the page
+    getAllElementsOfType: (nodeType) => document.querySelectorAll(nodeType),
+
+    // Method to get a nested child element from a parent based on a CSS selector
+    getChild: (selector, parentElement) => {
+      if (!parentElement) {
+        console.error("Parent element is not provided or does not exist.");
+        return null;
+      }
+
+      return parentElement.querySelector(selector); // This will find the first matching descendant, including nested ones
+    },
+    returnPrevOrFalse: (value) => value || false,
   };
   CD.getPreciseType = (value) => {
     return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
