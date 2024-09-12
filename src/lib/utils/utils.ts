@@ -223,7 +223,7 @@ export const runSteps = async (steps, config, obstacles) => {
     moveMouse(startX, startY, targetX, targetY, 50);
   };
   CD.getSelectorAndActionPairs = (selectorsAndActions) => {
-    return selectorsAndActions.split("\n");
+    return selectorsAndActions.split(";\n").map((el) => { return el.replace(/\n/g, '').replace(/[\n;]/g, '') });
   };
   ///// delete this
   function printMessage() {

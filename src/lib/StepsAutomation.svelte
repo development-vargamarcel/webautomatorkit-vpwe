@@ -1,6 +1,7 @@
 <script>
   import { injectScript, runSteps } from "./utils/utils";
-  const syntax = `function|args|output modifiers`;
+  const syntax = `function|args|output modifiers;
+  function|args|output modifiers`;
   const config = {
     errorPercentageMax: 70,
     waitTimeBeforeEachStep: 1000,
@@ -36,10 +37,10 @@
       actionToRunBeforeMainSelectorsAndActions: ``,
       actionToRunAfterMainSelectorsAndActions: ``,
       shouldRerunUntilNoSelectorsFound: true,
-      mainSelectorsAndActions: `getNode|[aria-label="Dismiss"]>markNodeWithClass|deleteThisOne>click>getNode|.deleteThisOne>deleteNode
-getNode|[aria-label="Send now"]>click
-getNodeWithText|Send without a note>click
-getNode|[aria-label="Got it"]>click
+      mainSelectorsAndActions: `getNode|[aria-label="Dismiss"]>markNodeWithClass|deleteThisOne>click>getNode|.deleteThisOne>deleteNode;
+getNode|[aria-label="Send now"]>click;
+getNodeWithText|Send without a note>click;
+getNode|[aria-label="Got it"]>click;
 pageReload|.ip-fuse-limit-alert__header.t-20.t-black.ph4`,
     },
   ];
