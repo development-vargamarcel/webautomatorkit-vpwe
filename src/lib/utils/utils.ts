@@ -43,6 +43,9 @@ export const runSteps = async (steps, config, obstacles) => {
       return node
     },
     click: (node) => {
+      if (!node) {
+        console.info('no valid node provided')
+      }
       node.click();
       return node;
     },
