@@ -1,6 +1,6 @@
 <script>
   import { injectScript, runSteps } from "./utils/utils";
-
+  const syntax = `function|args|output modifiers`;
   const config = {
     errorPercentageMax: 70,
     waitTimeBeforeEachStep: 1000,
